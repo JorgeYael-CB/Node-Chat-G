@@ -11,10 +11,12 @@ export class Server{
   constructor(
     private readonly port: number,
     private readonly routes: Router,
-  ){}
+  ){
+    this.config();
+  }
 
 
-  config(){
+  private config(){
     // Middlewares
     this.app.use( express.json() )
     this.app.use( express.urlencoded( {extended: true } ))
