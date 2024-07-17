@@ -1,0 +1,1 @@
+export type roles = 'USER' | 'ADMIN' | 'SUPER_USER' | 'DEVELOPER';
