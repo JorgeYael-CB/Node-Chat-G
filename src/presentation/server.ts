@@ -25,7 +25,7 @@ export class Server{
     this.app.use( cors() );
 
     // Routes
-    this.app.use( 'api/', this.routes );
+    this.app.use( '/api', this.routes );
   }
 
 
