@@ -1,13 +1,20 @@
 import { Request, Response } from "express";
+import { UsersRepository } from "../../domain/repositories";
+import { RegisterUserDto } from "../../domain/dtos/auth";
 
 
 export class AuthController {
 
-  constructor(){}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+  ){}
 
 
   registerUser = ( req:Request, res:Response ) => {
-    res.json('registerUser');
+    const [error, registerUserDto] = RegisterUserDto.create(req.body);
+    if( error ) return res.status(401).json({error, status: 401});
+
+    return res.status(201).json({user: registerUserDto, status: 201});
   }
 
   loginUser = ( req:Request, res:Response ) => {
@@ -29,7 +36,6 @@ export class AuthController {
   verifyAccount = ( req:Request, res:Response ) => {
     res.json('verifyAccount');
   }
-
 
 
 }

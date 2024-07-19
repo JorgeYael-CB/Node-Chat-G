@@ -1,3 +1,4 @@
+import { ValidateData } from "../../../config";
 
 
 
@@ -7,15 +8,21 @@ export class RegisterUserDto {
     public readonly email: string,
     public readonly password: string,
     public readonly name: string,
-    public readonly img: string,
   ){};
 
 
   static create( data: {[key:string]: any} ):[String?, RegisterUserDto?]{
-    const { email, password, name, img } = data;
+    const { email, password, name } = data;
 
+    const [nameErr, nameMapper] = ValidateData.userName(name);
+    const [emailErr, emailMapper] = ValidateData.email(email);
+    const [passErr, passMapper] = ValidateData.password(password);
 
-    return [, new RegisterUserDto(email, password, name, img)];
+    if( nameErr || emailErr || passErr  ){
+      return [nameErr ?? emailErr ?? passErr];
+    }
+
+    return [, new RegisterUserDto(emailMapper!, passMapper!, nameMapper!)];
   }
 
 }
