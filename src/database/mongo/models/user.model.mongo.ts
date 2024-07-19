@@ -30,7 +30,6 @@ const UserSchema = new Schema({
     enum: ['USER', 'ADMIN', 'SUPER_USER', 'DEVELOPER'],
   }
 
-
 }, {
   timestamps: true,
 });

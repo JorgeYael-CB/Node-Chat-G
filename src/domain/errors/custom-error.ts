@@ -10,7 +10,11 @@ export class CustomError extends Error {
 
 
   static BadRequestException( error: string ){
-    return new CustomError(error, 401);
+    return new CustomError(error, 400);
+  }
+
+  static Unauthorized( error: string ){
+    return new CustomError(error, 401)
   }
 
   static InternalServerError( error?: string, details?: any ){

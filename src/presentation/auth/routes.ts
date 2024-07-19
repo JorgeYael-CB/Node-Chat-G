@@ -2,11 +2,13 @@ import { Router } from "express";
 import { AuthController } from "./controller";
 import { UsersRepositoryImpl } from "../../infrastucture/repositories";
 import { UsersDatasourceImpl } from "../../infrastucture/datasources";
+import { BcryptAdapter } from "../../config";
 
 
 
+const bcryptAdapter = new BcryptAdapter();
 
-const usersDatasourceMongo = new UsersDatasourceImpl();
+const usersDatasourceMongo = new UsersDatasourceImpl(bcryptAdapter);
 export const usersRepositoryMongo = new UsersRepositoryImpl( usersDatasourceMongo );
 
 
