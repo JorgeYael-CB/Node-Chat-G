@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { UsersRepository } from "../../domain/repositories";
 import { RegisterUserDto } from "../../domain/dtos/auth";
+import { RegisterUserUseCase } from "../../domain/use-cases/auth";
+import { CustomError } from "../../domain/errors";
 
 
 export class AuthController {
@@ -10,11 +12,26 @@ export class AuthController {
   ){}
 
 
+  private handleError( error: any, res: Response ){
+    if( error instanceof CustomError ){
+      return res.status(error.status).json({status: error.status, error: error.error});
+    }
+
+    // Manejamos los errores internos
+    console.log(error);
+
+    return res.status(500).json({error: 'An unexpected error has occurred, please try again later.', status: 500});
+  }
+
+
   registerUser = ( req:Request, res:Response ) => {
     const [error, registerUserDto] = RegisterUserDto.create(req.body);
     if( error ) return res.status(401).json({error, status: 401});
 
-    return res.status(201).json({user: registerUserDto, status: 201});
+    new RegisterUserUseCase(this.usersRepository)
+      .register( registerUserDto! )
+        .then( data => res.status(201).json(data) )
+        .catch( err => this.handleError(err, res) );
   }
 
   loginUser = ( req:Request, res:Response ) => {

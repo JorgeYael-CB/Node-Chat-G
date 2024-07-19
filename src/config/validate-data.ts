@@ -12,7 +12,7 @@ export class ValidateData {
 
   static password( password: string ):[string?, string?]{
     if( !password ) return ['Missing password'];
-    if( typeof password !== 'string' ) return [''];
+    if( typeof password !== 'string' ) return ['Password is not valid!'];
     if( !isNaN(+password) ) return ['the password must have letters.'];
     if( password.trim().length < 5 ) return ['Passowrd is too short.'];
     if( password.trim().length > 100 ) return ['Passowrd is too long.'];
