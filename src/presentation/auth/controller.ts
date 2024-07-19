@@ -3,12 +3,14 @@ import { UsersRepository } from "../../domain/repositories";
 import { RegisterUserDto } from "../../domain/dtos/auth";
 import { RegisterUserUseCase } from "../../domain/use-cases/auth";
 import { CustomError } from "../../domain/errors";
+import { JwtAdapter } from "../../config";
 
 
 export class AuthController {
 
   constructor(
     private readonly usersRepository: UsersRepository,
+    private readonly jwtAdapter: JwtAdapter,
   ){}
 
 
@@ -28,7 +30,7 @@ export class AuthController {
     const [error, registerUserDto] = RegisterUserDto.create(req.body);
     if( error ) return res.status(401).json({error, status: 401});
 
-    new RegisterUserUseCase(this.usersRepository)
+    new RegisterUserUseCase(this.usersRepository, this.jwtAdapter)
       .register( registerUserDto! )
         .then( data => res.status(201).json(data) )
         .catch( err => this.handleError(err, res) );
