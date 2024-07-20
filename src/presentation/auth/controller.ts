@@ -3,7 +3,7 @@ import { UsersRepository } from "../../domain/repositories";
 import { ForgotPasswordDto, LoginUserDto, RegisterUserDto, ResetPasswordUserDto } from "../../domain/dtos/auth";
 import { ForgotPasswordUseCase, LoginUserUseCase, RegisterUserUseCase, ResetPasswordUserUseCase } from "../../domain/use-cases/auth";
 import { CustomError } from "../../domain/errors";
-import { JwtAdapter } from "../../config";
+import { JwtAdapter, MailerAdapter } from "../../config";
 
 
 export class AuthController {
@@ -11,6 +11,7 @@ export class AuthController {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly jwtAdapter: JwtAdapter,
+    private readonly mailerAdapter: MailerAdapter,
   ){}
 
 
@@ -62,7 +63,7 @@ export class AuthController {
     const [error, forgotPasswordDto] = ForgotPasswordDto.create(req.query);
     if( error ) return res.status(401).json({error, status: 401});
 
-    new ForgotPasswordUseCase(this.usersRepository, this.jwtAdapter)
+    new ForgotPasswordUseCase(this.usersRepository, this.jwtAdapter, this.mailerAdapter)
       .start( forgotPasswordDto! )
         .then( data => res.status(200).json(data) )
         .catch( err => this.handleError(err, res) );
