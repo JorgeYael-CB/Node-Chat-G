@@ -9,6 +9,6 @@ export abstract class UsersRepository {
   abstract resetPassword( resetPasswordDto: ResetPasswordUserDto ): Promise< UserEntity >;
   abstract updateProfile( updateProfileUserDto: UpdateProfileUserDto ): Promise<UserEntity>;
   abstract getUsers(): Promise< UserEntity[] >;
-  abstract getUserById( id: any ): Promise<UserEntity>;
+  abstract getUser( id?: any, name?: string, email?: string ): Promise<UserEntity>;
 
 }

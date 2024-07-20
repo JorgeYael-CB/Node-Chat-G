@@ -36,6 +36,7 @@ export class UsersDatasourceImpl implements UsersDatasource {
   private async getUserBy( email?: string, id?: any, name?: string ){
     let user;
     if( id && !isValidObjectId(id) ) throw CustomError.BadRequestException(`Id is not valid.`);
+    if( !email && !id && !name ) throw CustomError.BadRequestException(`Missing name, id or name.`);
 
     if( id ){
       user = await UserModel.findById(id)
@@ -103,6 +104,14 @@ export class UsersDatasourceImpl implements UsersDatasource {
   }
 
 
+  async getUser(id?: any, name?: string, email?: string): Promise<UserEntity> {
+    const user = await this.getUserBy(email, id, name);
+    if( !user ) throw CustomError.BadRequestException(`User not exist!`);
+
+    return UserMapper.getUserFromObject(user);
+  }
+
+
   updateProfile(updateProfileUserDto: UpdateProfileUserDto): Promise<UserEntity> {
     throw new Error("Method not implemented.");
   }
@@ -111,8 +120,5 @@ export class UsersDatasourceImpl implements UsersDatasource {
     throw new Error("Method not implemented.");
   }
 
-  getUserById(id: any): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
-  }
 
 }

@@ -3,19 +3,26 @@ import { ValidateData } from "../../../config";
 export class ForgotPasswordDto {
 
   constructor(
-    public readonly email: string,
+    public readonly email?: string,
+    public readonly name?: string,
   ){}
 
 
   static create( data: {[key:string]: any} ):[string?, ForgotPasswordDto?]{
-    const { email } = data;
+    const { email, name } = data;
 
-    const [emailErr, emailMapper] = ValidateData.email(email);
-    if( emailErr ){
-      return [emailErr];
+    if( !email && !name ){
+      return ['Missing email or name'];
     }
 
-    return [, new ForgotPasswordDto(emailMapper!)];
+    const [emailErr, emailMapper] = email? ValidateData.email(email) : [undefined, undefined];
+    const [nameErr, nameMapper] = name? ValidateData.userName(name) : [undefined, undefined];
+
+    if( emailErr || nameErr ){
+      return [emailErr || nameErr];
+    }
+
+    return [, new ForgotPasswordDto(emailMapper, nameMapper)];
   }
 
 }
