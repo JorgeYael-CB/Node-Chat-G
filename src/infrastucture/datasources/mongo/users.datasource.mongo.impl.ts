@@ -6,6 +6,14 @@ import { LoginUserDto, RegisterUserDto, ResetPasswordUserDto, UpdateProfileUserD
 import { UserEntity } from "../../../domain/entities";
 import { CustomError } from "../../../domain/errors";
 import { UserMapper } from "../../mappers";
+import { roles } from "../../../domain/types";
+
+
+interface validate {
+  active?: boolean;
+  role?: roles;
+}
+
 
 
 export class UsersDatasourceImpl implements UsersDatasource {
@@ -13,6 +21,16 @@ export class UsersDatasourceImpl implements UsersDatasource {
   constructor(
     private readonly bcryptAdapter: BcryptAdapter,
   ){}
+
+
+  private validateUserStatus( user: any, validate: validate){
+    const { active, role } = validate;
+
+    if( active && !user.active ) throw CustomError.Unauthorized(`This account has been suspended, please contact support.`);
+    if( role && !user.roles.includes(role) ) throw CustomError.Unauthorized(`You do not have access to the content.`);
+
+    return user;
+  }
 
 
   private async getUserBy( email?: string, id?: any, name?: string ){
@@ -39,7 +57,7 @@ export class UsersDatasourceImpl implements UsersDatasource {
     const checkPassword = this.bcryptAdapter.comapre(loginUserDto.password, user.password);
     if( !checkPassword ) throw CustomError.BadRequestException(`The credentials are not correct.`);
 
-    if( !user.active ) throw CustomError.BadRequestException(`This account has been suspended, please contact support.`);
+    this.validateUserStatus(user, {active: true});
 
     return UserMapper.getUserFromObject(user);
   }
@@ -71,9 +89,19 @@ export class UsersDatasourceImpl implements UsersDatasource {
   }
 
 
-  resetPassword(resetPasswordDto: ResetPasswordUserDto): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
+  async resetPassword(resetPasswordDto: ResetPasswordUserDto): Promise<UserEntity> {
+    const user = await this.getUserBy(undefined, resetPasswordDto.userId);
+    if( !user ) throw CustomError.BadRequestException(`User with id: ${resetPasswordDto.userId} not found`);
+
+    this.validateUserStatus(user, {active: true});
+
+    const password = this.bcryptAdapter.hash(resetPasswordDto.password);
+    user.password = password;
+    await user.save();
+
+    return UserMapper.getUserFromObject(user);
   }
+
 
   updateProfile(updateProfileUserDto: UpdateProfileUserDto): Promise<UserEntity> {
     throw new Error("Method not implemented.");
