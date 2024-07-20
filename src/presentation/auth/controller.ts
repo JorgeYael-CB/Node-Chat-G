@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UsersRepository } from "../../domain/repositories";
-import { LoginUserDto, RegisterUserDto, ResetPasswordUserDto } from "../../domain/dtos/auth";
+import { ForgotPasswordDto, LoginUserDto, RegisterUserDto, ResetPasswordUserDto } from "../../domain/dtos/auth";
 import { LoginUserUseCase, RegisterUserUseCase, ResetPasswordUserUseCase } from "../../domain/use-cases/auth";
 import { CustomError } from "../../domain/errors";
 import { JwtAdapter } from "../../config";
@@ -58,12 +58,16 @@ export class AuthController {
         .catch( err => this.handleError(err, res) );
   }
 
-  updateProfile = ( req:Request, res:Response ) => {
-    res.json('updateProfile');
+  forgotPassword = ( req:Request, res:Response ) => {
+    const [error, forgotPasswordDto] = ForgotPasswordDto.create(req.query);
+    if( error ) return res.status(401).json({error, status: 401});
+
+    return res.json(forgotPasswordDto);
   }
 
-  forgotPassword = ( req:Request, res:Response ) => {
-    res.json('forgotPassword');
+
+  updateProfile = ( req:Request, res:Response ) => {
+    res.json('updateProfile');
   }
 
   verifyAccount = ( req:Request, res:Response ) => {
