@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UsersRepository } from "../../domain/repositories";
-import { RegisterUserDto } from "../../domain/dtos/auth";
+import { LoginUserDto, RegisterUserDto } from "../../domain/dtos/auth";
 import { RegisterUserUseCase } from "../../domain/use-cases/auth";
 import { CustomError } from "../../domain/errors";
 import { JwtAdapter } from "../../config";
@@ -36,9 +36,14 @@ export class AuthController {
         .catch( err => this.handleError(err, res) );
   }
 
+
   loginUser = ( req:Request, res:Response ) => {
-    res.json('loginUser');
+    const [error, loginUserDto] = LoginUserDto.create(req.body);
+    if( error ) return res.status(401).json({error, status: 401});
+
+    return res.status(201).json({loginUserDto});
   }
+
 
   updateProfile = ( req:Request, res:Response ) => {
     res.json('updateProfile');

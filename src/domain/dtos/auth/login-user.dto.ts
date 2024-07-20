@@ -1,3 +1,4 @@
+import { ValidateData } from "../../../config";
 
 
 
@@ -12,8 +13,15 @@ export class LoginUserDto {
   static create( data: {[key:string]: any} ):[String?, LoginUserDto?]{
     const { email, password } = data;
 
+    const [emailErr, emailMapper] = ValidateData.email(email);
+    const [passError, passMapper] = ValidateData.password(password);
 
-    return [, new LoginUserDto(email, password)];
+    if( emailErr || passError ){
+      return [emailErr || passError];
+    }
+
+
+    return [, new LoginUserDto(emailMapper!, passMapper!)];
   }
 
 }
