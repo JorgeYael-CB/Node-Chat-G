@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { UsersRepository } from "../../domain/repositories";
 import { LoginUserDto, RegisterUserDto } from "../../domain/dtos/auth";
-import { RegisterUserUseCase } from "../../domain/use-cases/auth";
+import { LoginUserUseCase, RegisterUserUseCase } from "../../domain/use-cases/auth";
 import { CustomError } from "../../domain/errors";
 import { JwtAdapter } from "../../config";
 
@@ -41,7 +41,10 @@ export class AuthController {
     const [error, loginUserDto] = LoginUserDto.create(req.body);
     if( error ) return res.status(401).json({error, status: 401});
 
-    return res.status(201).json({loginUserDto});
+    new LoginUserUseCase(this.usersRepository, this.jwtAdapter)
+      .login( loginUserDto! )
+        .then( data => res.status(200).json(data) )
+        .catch( err => this.handleError(err, res) );
   }
 
 

@@ -31,8 +31,17 @@ export class UsersDatasourceImpl implements UsersDatasource {
   }
 
 
-  login(loginUserDto: LoginUserDto): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
+  async login(loginUserDto: LoginUserDto): Promise<UserEntity> {
+    const user = await this.getUserBy(loginUserDto.email, undefined, loginUserDto.name);
+    if( !user ) throw CustomError.BadRequestException(`There is no account with those credentials.`);
+
+    // Verificamos las passwords
+    const checkPassword = this.bcryptAdapter.comapre(loginUserDto.password, user.password);
+    if( !checkPassword ) throw CustomError.BadRequestException(`The credentials are not correct.`);
+
+    if( !user.active ) throw CustomError.BadRequestException(`This account has been suspended, please contact support.`);
+
+    return UserMapper.getUserFromObject(user);
   }
 
 

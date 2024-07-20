@@ -28,6 +28,11 @@ const UserSchema = new Schema({
     type: [String],
     default: ['USER'],
     enum: ['USER', 'ADMIN', 'SUPER_USER', 'DEVELOPER'],
+  },
+
+  active: { // su cuenta esta activa o fue bloqueada
+    type: Boolean,
+    default: true,
   }
 
 }, {

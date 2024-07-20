@@ -11,6 +11,7 @@ export class UserEntity {
     public readonly img: string,
     public readonly roles: roles[],
     public readonly id: string | number,
+    public readonly active: boolean,
   ){}
 
 }
