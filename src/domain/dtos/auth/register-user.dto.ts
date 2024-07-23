@@ -8,11 +8,12 @@ export class RegisterUserDto {
     public readonly email: string,
     public readonly password: string,
     public readonly name: string,
+    public readonly country?: string,
   ){};
 
 
   static create( data: {[key:string]: any} ):[String?, RegisterUserDto?]{
-    const { email, password, name } = data;
+    const { email, password, name, country } = data;
 
     const [nameErr, nameMapper] = ValidateData.userName(name);
     const [emailErr, emailMapper] = ValidateData.email(email);
@@ -22,7 +23,7 @@ export class RegisterUserDto {
       return [nameErr ?? emailErr ?? passErr];
     }
 
-    return [, new RegisterUserDto(emailMapper!, passMapper!, nameMapper!)];
+    return [, new RegisterUserDto(emailMapper!, passMapper!, nameMapper!, country)];
   }
 
 }

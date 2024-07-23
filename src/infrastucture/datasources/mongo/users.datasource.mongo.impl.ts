@@ -73,6 +73,7 @@ export class UsersDatasourceImpl implements UsersDatasource {
         name: registerUserDto.name,
         password: passwordHash,
         roles: ['USER'],
+        country: registerUserDto.country,
       });
 
       return UserMapper.getUserFromObject(newUser);

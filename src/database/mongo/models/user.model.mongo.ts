@@ -33,6 +33,11 @@ const UserSchema = new Schema({
   active: { // su cuenta esta activa o fue bloqueada
     type: Boolean,
     default: true,
+  },
+
+  country: {
+    type: String,
+    default: 'International',
   }
 
 }, {
