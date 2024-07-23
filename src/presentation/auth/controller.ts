@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UsersRepository } from "../../domain/repositories";
-import { ForgotPasswordDto, LoginUserDto, RegisterUserDto, ResetPasswordUserDto } from "../../domain/dtos/auth";
+import { ForgotPasswordDto, LoginUserDto, RegisterUserDto, ResetPasswordUserDto, UpdateProfileUserDto } from "../../domain/dtos/auth";
 import { ForgotPasswordUseCase, LoginUserUseCase, RegisterUserUseCase, ResetPasswordUserUseCase } from "../../domain/use-cases/auth";
 import { CustomError } from "../../domain/errors";
 import { JwtAdapter, MailerAdapter } from "../../config";
@@ -71,7 +71,10 @@ export class AuthController {
 
 
   updateProfile = ( req:Request, res:Response ) => {
-    res.json('updateProfile');
+    const [error, updateProfileUserDto] = UpdateProfileUserDto.create(req.body);
+    if( error ) return res.status(400).json({error, status: 400});
+
+    return res.json(updateProfileUserDto);
   }
 
   verifyAccount = ( req:Request, res:Response ) => {
