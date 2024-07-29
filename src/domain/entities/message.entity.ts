@@ -7,7 +7,7 @@ export class MessageEntity {
     public readonly user: UserEntity,
     public readonly server: any,
     public readonly content: string,
-    public readonly id: string,
+    public readonly id: string | number,
   ){};
 
 }
