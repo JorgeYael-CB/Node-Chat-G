@@ -5,7 +5,7 @@ import cors from 'cors';
 
 export class Server{
 
-  private readonly app = express();
+  public readonly app = express();
 
 
   constructor(
@@ -23,7 +23,9 @@ export class Server{
 
     // Cors
     this.app.use( cors() );
+  }
 
+  public setRoutes(){
     // Routes
     this.app.use( '/api', this.routes );
   }
