@@ -21,7 +21,14 @@ export class JwtAdapter {
     })
   }
 
-  compare(){
+  compare<T>( token: string ): Promise<T | null>{
+    return new Promise( ( resolve ) => {
+      jwt.verify( token, this.seed, (error, decoded) => {
+        if( error ) resolve(null);
+
+        resolve(decoded as T);
+      })
+    })
   }
 
 }
