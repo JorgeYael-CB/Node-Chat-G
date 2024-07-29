@@ -3,8 +3,8 @@ export class SendMessageDto {
 
   constructor(
     public content: string,
-    public userId: string | number,
-    public serverId: string | number,
+    public userId: string,
+    public serverId: string,
   ){};
 
 

@@ -20,7 +20,7 @@ export class AuthMiddleware {
   }
 
 
-  getUserIdByToken = async(req:Request, res:Response):Promise<string> => {
+  private getUserIdByToken = async(req:Request, res:Response):Promise<string> => {
     if( req.body.userId )
       throw CustomError.Unauthorized('Please review your submitted information.');
 

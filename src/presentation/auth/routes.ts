@@ -3,6 +3,7 @@ import { AuthController } from "./controller";
 import { UsersRepositoryImpl } from "../../infrastucture/repositories";
 import { UsersDatasourceImpl } from "../../infrastucture/datasources";
 import { BcryptAdapter, envs, JwtAdapter, MailerAdapter } from "../../config";
+import { AuthMiddleware } from "../middlewares";
 
 
 
@@ -15,6 +16,7 @@ export const mailerAdapter = new MailerAdapter({
 
 const usersDatasourceMongo = new UsersDatasourceImpl(bcryptAdapter);
 export const usersRepositoryMongo = new UsersRepositoryImpl( usersDatasourceMongo );
+export const authMiddleware = new AuthMiddleware(jwtAdpater);
 
 
 export class AuthRoutes{
