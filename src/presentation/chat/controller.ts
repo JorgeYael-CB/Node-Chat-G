@@ -5,6 +5,7 @@ import { MessagesRepository } from "../../domain/repositories";
 import { CustomError } from "../../domain/errors";
 
 
+
 export class ChatController {
 
   constructor(
