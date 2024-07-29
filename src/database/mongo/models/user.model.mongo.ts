@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, SchemaTypeOptions, model } from "mongoose";
 
 
 const UserSchema = new Schema({
@@ -38,7 +38,19 @@ const UserSchema = new Schema({
   country: {
     type: String,
     default: 'International',
-  }
+  },
+
+  lastChatsServer: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'ChatServer',
+    }
+  ],
+
+  currentServerChat: {
+    type: Schema.Types.ObjectId,
+    ref: 'ChatServer',
+  },
 
 }, {
   timestamps: true,
