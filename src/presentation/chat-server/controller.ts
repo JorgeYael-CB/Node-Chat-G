@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ChatServerRepository } from "../../domain/repositories";
+import { JoinRandomServerDto } from "../../domain/dtos/chat-server";
 
 export class ChatServerController {
 
@@ -9,7 +10,10 @@ export class ChatServerController {
 
 
   joinRandomServer = ( req:Request, res:Response ) => {
-    res.json('uniendote a un servidor random');
+    const [error, joinRandomServerDto] = JoinRandomServerDto.create(req.body);
+    if( error ) return res.status(400).json({error, status: 400});
+
+    return res.json(joinRandomServerDto);
   }
 
 

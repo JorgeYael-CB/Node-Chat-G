@@ -2,6 +2,7 @@ import { Router } from "express";
 import { ChatServerController } from "./";
 import { ChatServerRepositoryImpl } from "../../infrastucture/repositories";
 import { ChatServerDatasourceImpl } from "../../infrastucture/datasources";
+import { authMiddleware } from "../auth";
 
 
 const chatServerDatasource = new ChatServerDatasourceImpl();
@@ -14,10 +15,8 @@ export class ChatServerRoutes {
     const router = Router();
     const controller = new ChatServerController(chatServerRepository);
 
-
-    router.get('/join-random-server', controller.joinRandomServer);
+    router.post('/join-random-server', authMiddleware.validateUserFromToken, controller.joinRandomServer);
     router.get('/join-by-id/:serverId', controller.joinById);
-
 
     return router;
   }
