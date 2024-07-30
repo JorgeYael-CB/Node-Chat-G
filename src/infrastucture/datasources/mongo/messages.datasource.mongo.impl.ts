@@ -17,6 +17,7 @@ export class MessagesDatasourceMongoImpl implements MessagesDatasource {
     const user = await UserModel.findById(id);
 
     if( !user ) throw CustomError.BadRequestException(`User with id ${id} not found.`);
+    return user;
   }
 
   private async getServerById( id: any ){
@@ -24,10 +25,11 @@ export class MessagesDatasourceMongoImpl implements MessagesDatasource {
     const server = await ChatServerModel.findById( id );
 
     if( !server ) throw CustomError.BadRequestException(`Server with id: ${id} not found.`);
+    return server;
   }
 
   private checkUserStatus( user:any, roles?:roles[] ){
-    if( !user.isActive ) throw CustomError.BadRequestException(`This Account Has Been Suspended.`);
+    if( !user.active ) throw CustomError.BadRequestException(`This Account Has Been Suspended.`);
 
     roles?.forEach( role => {
       if( !user.roles.includes(role) ) throw CustomError.BadRequestException(`the user does not have access to this content.`);
@@ -50,6 +52,9 @@ export class MessagesDatasourceMongoImpl implements MessagesDatasource {
       server: serverId,
       user: userId,
     });
+
+    chatServer.messages.push(newMessage._id);
+    chatServer.save();
 
     return MessageMapper.getMessageFromObject(newMessage);
   }

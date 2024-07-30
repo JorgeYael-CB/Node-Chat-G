@@ -5,11 +5,14 @@ import { ChatServerEntity } from "../../../domain/entities";
 import { CustomError } from "../../../domain/errors";
 import { ChatServerModel, UserModel } from "../../../database/mongo";
 import { ChatServerMapper } from "../../mappers";
+import { UuidAdpater } from "../../../config/uuid";
 
 
 export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
 
-  constructor(){}
+  constructor(
+    private readonly uuidAdapter:UuidAdpater,
+  ){}
 
 
   private async getUserById( userId: any ){
@@ -25,21 +28,24 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
     throw new Error("Method not implemented.");
   };
 
-  async joinRandomServerDto(joinRandomServerDto: JoinRandomServerDto): Promise<ChatServerEntity> {
+  async joinRandomServer(joinRandomServerDto: JoinRandomServerDto): Promise<ChatServerEntity> {
     // Traer al usuario con ese ID
     let server;
     const user = await this.getUserById( joinRandomServerDto.userId );
 
     // Validar que hayan servidores disponibles con la region del usuario
-    server = await ChatServerModel.findOne({country: user.country}).where('users').lt(20);
+    server = await ChatServerModel.findOne({country: user.country});
 
       // Si no hay, crear un nuevo servidor con la region del usuario.
     if( !server ){
       server = await ChatServerModel.create({
         country: user.country,
-        limitUsers: 20,
         users: [user._id],
+        serverId: this.uuidAdapter.id,
       });
+    } else {
+      server.users.push(user._id)
+      await server.save();
     }
 
     //retornar el servidor con sus ultimos 10 mensajes.

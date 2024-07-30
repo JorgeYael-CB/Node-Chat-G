@@ -3,9 +3,12 @@ import { ChatServerController } from "./";
 import { ChatServerRepositoryImpl } from "../../infrastucture/repositories";
 import { ChatServerDatasourceImpl } from "../../infrastucture/datasources";
 import { authMiddleware } from "../auth";
+import { UuidAdpater } from "../../config";
 
 
-const chatServerDatasource = new ChatServerDatasourceImpl();
+export const uuidAdapter = new UuidAdpater()
+
+const chatServerDatasource = new ChatServerDatasourceImpl(uuidAdapter);
 export const chatServerRepository = new ChatServerRepositoryImpl(chatServerDatasource);
 
 

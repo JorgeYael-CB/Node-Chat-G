@@ -1,6 +1,7 @@
 import { WssService } from '../../../config';
 import { SendMessageDto } from '../../dtos/messages';
 import { MessagesRepository } from '../../repositories';
+import { WsType } from '../../types';
 
 
 export class SendMessageUseCase {
@@ -19,11 +20,11 @@ export class SendMessageUseCase {
       serverId: sendMessageDto.serverId,
     }
 
-    this.wssService.onSendMessage('client-message', data);
+    const messageWs:WsType = 'client-message';
+    this.wssService.onSendMessage(messageWs, data);
 
     return {
       status: 201,
-      message,
       data,
     }
   }

@@ -15,8 +15,8 @@ export class ChatServerRepositoryImpl implements ChatServerRepository {
     return this.chatServerDatasource.joinById(joinServerByIdDto);
   }
 
-  joinRandomServerDto(joinRandomServerDto: JoinRandomServerDto): Promise<ChatServerEntity> {
-    return this.chatServerDatasource.joinRandomServerDto( joinRandomServerDto );
+  joinRandomServer(joinRandomServerDto: JoinRandomServerDto): Promise<ChatServerEntity> {
+    return this.chatServerDatasource.joinRandomServer( joinRandomServerDto );
   }
 
 }

@@ -4,3 +4,4 @@ export * from './bcrypt';
 export * from './jwt';
 export * from './mailer';
 export * from './ws';
+export * from './uuid';
