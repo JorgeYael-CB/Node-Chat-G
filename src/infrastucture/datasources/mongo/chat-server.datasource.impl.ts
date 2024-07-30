@@ -1,6 +1,10 @@
+import { isValidObjectId } from "mongoose";
 import { ChatServerDatasoruce } from "../../../domain/datasources";
 import { JoinServerByIdDto, JoinRandomServerDto } from "../../../domain/dtos/chat-server";
 import { ChatServerEntity } from "../../../domain/entities";
+import { CustomError } from "../../../domain/errors";
+import { ChatServerModel, UserModel } from "../../../database/mongo";
+import { ChatServerMapper } from "../../mappers";
 
 
 export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
@@ -8,12 +12,42 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
   constructor(){}
 
 
+  private async getUserById( userId: any ){
+    if( !isValidObjectId(userId) ) throw CustomError.BadRequestException('Id is not valid.');
+
+    const user = await UserModel.findById(userId);
+    if( !user ) throw CustomError.BadRequestException('User not found.');
+
+    return user;
+  }
+
   joinById(joinServerByIdDto: JoinServerByIdDto): Promise<ChatServerEntity> {
     throw new Error("Method not implemented.");
   };
 
-  joinRandomServerDto(joinRandomServerDto: JoinRandomServerDto): Promise<ChatServerEntity> {
-    throw new Error("Method not implemented.");
+  async joinRandomServerDto(joinRandomServerDto: JoinRandomServerDto): Promise<ChatServerEntity> {
+    // Traer al usuario con ese ID
+    let server;
+    const user = await this.getUserById( joinRandomServerDto.userId );
+
+    // Validar que hayan servidores disponibles con la region del usuario
+    server = await ChatServerModel.findOne({country: user.country}).where('users').lt(20);
+
+      // Si no hay, crear un nuevo servidor con la region del usuario.
+    if( !server ){
+      server = await ChatServerModel.create({
+        country: user.country,
+        limitUsers: 20,
+        users: [user._id],
+      });
+    }
+
+    //retornar el servidor con sus ultimos 10 mensajes.
+    return ChatServerMapper.getChatServerFromObject( await server.populate('users', {
+      name: 1,
+      country: 1,
+      img: 1,
+    }));
   };
 
 }

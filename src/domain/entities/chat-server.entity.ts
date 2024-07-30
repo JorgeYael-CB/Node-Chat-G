@@ -1,11 +1,11 @@
-import { MessageEntity, UserEntity } from "./";
+import { UserEntity } from "./";
 
 
 export class ChatServerEntity {
 
   constructor(
     public readonly users: UserEntity[],
-    public readonly messages: MessageEntity[],
+    public readonly messages: string[],
     public readonly limitUsers: number,
     public readonly serverId: string,
     public readonly id: string | number,
