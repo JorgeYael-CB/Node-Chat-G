@@ -105,8 +105,8 @@ export class UsersDatasourceImpl implements UsersDatasource {
   }
 
 
-  async getUser(id?: any, name?: string, email?: string): Promise<UserEntity> {
-    const user = await this.getUserBy(email, id, name);
+  async getUserById(id?: any): Promise<UserEntity> {
+    const user = await this.getUserBy(undefined, id);
     if( !user ) throw CustomError.BadRequestException(`User not exist!`);
 
     return UserMapper.getUserFromObject(user);

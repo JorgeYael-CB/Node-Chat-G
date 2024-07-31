@@ -6,9 +6,10 @@ import { WsType } from "../../types";
 
 export class JoinRandomServerUseCase {
 
+  private readonly wsService = WssService.instance;
+
   constructor(
     private readonly chatServerRepository: ChatServerRepository,
-    private readonly wsService = WssService.instance,
   ){}
 
 

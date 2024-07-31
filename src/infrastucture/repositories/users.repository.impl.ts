@@ -10,8 +10,8 @@ export class UsersRepositoryImpl implements UsersRepository {
     private readonly usersDatasource: UsersDatasource,
   ){}
 
-  getUser(id?: any, name?: string, email?: string): Promise<UserEntity> {
-    return this.usersDatasource.getUser(id, name, email);
+  getUserById(id?: any): Promise<UserEntity> {
+    return this.usersDatasource.getUserById(id);
   }
   login(loginUserDto: LoginUserDto): Promise<UserEntity> {
     return this.usersDatasource.login(loginUserDto);

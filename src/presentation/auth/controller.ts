@@ -77,6 +77,15 @@ export class AuthController {
     return res.json(updateProfileUserDto);
   }
 
+  getUserById = (req:Request, res:Response) => {
+    this.usersRepository.getUserById( req.body.userId )
+      .then( user => res.status(200).json({
+        user: {...user, password: undefined},
+        status: 200,
+      }))
+      .catch( err => this.handleError(err, res) );
+  }
+
   verifyAccount = ( req:Request, res:Response ) => {
     res.json('verifyAccount');
   }

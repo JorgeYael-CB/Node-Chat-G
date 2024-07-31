@@ -13,6 +13,7 @@ export class UserEntity {
     public readonly id: string | number,
     public readonly active: boolean,
     public readonly country: string,
+    public readonly messages: string[],
   ){}
 
 }

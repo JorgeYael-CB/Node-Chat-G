@@ -40,6 +40,14 @@ const UserSchema = new Schema({
     default: 'International',
   },
 
+  messages: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Message',
+      default: [],
+    }
+  ],
+
   lastChatsServer: [
     {
       type: Schema.Types.ObjectId,

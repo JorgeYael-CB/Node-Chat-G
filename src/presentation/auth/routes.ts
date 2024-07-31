@@ -32,6 +32,7 @@ export class AuthRoutes{
     router.patch('/reset-password', controller.resetPassword);
     router.patch('/verify-account', controller.verifyAccount);
     router.put('/update-profile', controller.updateProfile);
+    router.get('/get-user-by-id', authMiddleware.validateUserFromToken, controller.getUserById);
 
 
     return router;
