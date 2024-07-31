@@ -13,7 +13,8 @@ export class ForgotPasswordUseCase {
 
 
   async start( forgotPasswordDto: ForgotPasswordDto ){
-    const user = await this.usersRepository.getUser(undefined, forgotPasswordDto.name, forgotPasswordDto.email);
+    throw new Error('Method not implemented.');
+    const user = await this.usersRepository.getUserById(forgotPasswordDto);
     const token = await this.jwtAdapter.create({userId: user.id});
 
     this.mailerAdapter.send({

@@ -28,6 +28,7 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
     throw new Error("Method not implemented.");
   };
 
+
   async joinRandomServer(joinRandomServerDto: JoinRandomServerDto): Promise<ChatServerEntity> {
     // Traer al usuario con ese ID
     let server;
@@ -55,5 +56,6 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
       img: 1,
     }));
   };
+
 
 }
