@@ -20,6 +20,7 @@ export class JoinRandomServerUseCase {
     this.wsService.onSendMessage(wsMessage, {
       userId: joinRandomServerDto.userId,
       serverId: server.serverId,
+      newUser: server.users.find( user => user.id === joinRandomServerDto.userId ),
     });
 
     return {
