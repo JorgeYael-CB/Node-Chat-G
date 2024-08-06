@@ -57,7 +57,13 @@ export class MessagesDatasourceMongoImpl implements MessagesDatasource {
     user.messages.push(newMessage._id);
     chatServer.save();
 
-    return MessageMapper.getMessageFromObject(newMessage);
+    return MessageMapper.getMessageFromObject(await newMessage.populate('user', {
+      img: 1,
+      name: 1,
+      country: 1,
+      roles: 1,
+      active: 1,
+    }));
   }
 
 }

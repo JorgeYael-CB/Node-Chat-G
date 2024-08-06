@@ -14,18 +14,13 @@ export class SendMessageUseCase {
 
   async onSendMessage( sendMessageDto: SendMessageDto ){
     const message = await this.messagesRepository.sendMessage(sendMessageDto);
-    const data = {
-      userId: sendMessageDto.userId,
-      content: message.content,
-      serverId: sendMessageDto.serverId,
-    }
 
     const messageWs:WsType = 'client-message';
-    this.wssService.onSendMessage(messageWs, data);
+    this.wssService.onSendMessage(messageWs, message);
 
     return {
       status: 201,
-      data,
+      message,
     }
   }
 
