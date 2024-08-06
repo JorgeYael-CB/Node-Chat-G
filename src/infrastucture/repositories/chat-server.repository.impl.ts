@@ -1,5 +1,5 @@
 import { ChatServerDatasoruce } from "../../domain/datasources";
-import { JoinServerByIdDto, JoinRandomServerDto } from "../../domain/dtos/chat-server";
+import { JoinServerByIdDto, JoinRandomServerDto, DisconnectServerDto } from "../../domain/dtos/chat-server";
 import { ChatServerEntity } from "../../domain/entities";
 import { ChatServerRepository } from "../../domain/repositories";
 
@@ -9,6 +9,11 @@ export class ChatServerRepositoryImpl implements ChatServerRepository {
   constructor(
     private readonly chatServerDatasource: ChatServerDatasoruce,
   ){}
+
+
+  disconnectServer(disconnectServerDto: DisconnectServerDto): Promise<void> {
+    return this.chatServerDatasource.disconnectServer( disconnectServerDto );
+  }
 
 
   joinById(joinServerByIdDto: JoinServerByIdDto): Promise<ChatServerEntity> {

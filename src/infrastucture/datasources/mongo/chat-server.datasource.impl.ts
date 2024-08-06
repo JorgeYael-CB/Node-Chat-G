@@ -1,6 +1,6 @@
 import { isValidObjectId } from "mongoose";
 import { ChatServerDatasoruce } from "../../../domain/datasources";
-import { JoinServerByIdDto, JoinRandomServerDto } from "../../../domain/dtos/chat-server";
+import { JoinServerByIdDto, JoinRandomServerDto, DisconnectServerDto } from "../../../domain/dtos/chat-server";
 import { ChatServerEntity } from "../../../domain/entities";
 import { CustomError } from "../../../domain/errors";
 import { ChatServerModel, UserModel } from "../../../database/mongo";
@@ -13,6 +13,11 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
   constructor(
     private readonly uuidAdapter:UuidAdpater,
   ){}
+
+
+  async disconnectServer(disconnectServerDto: DisconnectServerDto): Promise<void> {
+    console.log(`Se fue el usuario: ${disconnectServerDto.userId} del servidor: ${disconnectServerDto.serverId}`);
+  }
 
 
   private async getUserById( userId: any ){
