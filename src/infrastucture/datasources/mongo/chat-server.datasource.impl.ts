@@ -42,7 +42,7 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
     // Validar que hayan servidores disponibles con la region del usuario
     server = await ChatServerModel.findOne({country: user.country});
 
-      // Si no hay, crear un nuevo servidor con la region del usuario.
+    // Si no hay, crear un nuevo servidor con la region del usuario.
     if( !server ){
       server = await ChatServerModel.create({
         country: user.country,
@@ -50,7 +50,13 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
         serverId: this.uuidAdapter.id,
       });
     } else {
-      server.users.push(user._id)
+      server.users.forEach( usr => {
+        if( usr.toString() === user._id.toString() ){
+          throw CustomError.BadRequestException('User already server.');
+        }
+      });
+
+      server.users.push(user._id);
       await server.save();
     }
 

@@ -15,11 +15,12 @@ export class JoinRandomServerUseCase {
 
   async joinServer( joinRandomServerDto: JoinRandomServerDto){
     const server = await this.chatServerRepository.joinRandomServer(joinRandomServerDto);
-    const wsMessage: WsType = 'new-user-joined';
+    const wsMessage:WsType = 'new-user-joined';
 
     this.wsService.onSendMessage(wsMessage, {
       userId: joinRandomServerDto.userId,
-      serverId: server.serverId,
+      serverUuid: server.serverId,
+      serverId: server.id,
       newUser: server.users.find( user => user.id === joinRandomServerDto.userId ),
     });
 
