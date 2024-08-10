@@ -14,6 +14,8 @@ export class UserEntity {
     public readonly active: boolean,
     public readonly country: string,
     public readonly messages: string[],
+    public readonly createdAt: Date,
+    public readonly updatedAt: Date,
   ){}
 
 }
