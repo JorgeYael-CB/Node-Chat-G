@@ -18,7 +18,7 @@ export class JoinByIdServerUseCase {
       userId: joinServerByIdDto.userId,
       serverUuid: server.serverId,
       serverId: server.id,
-      newUser: server.users.find( user => user.id === joinServerByIdDto.userId ),
+      newUser: server.users.find( user => user.id.toString() === joinServerByIdDto.userId ),
     });
 
     return {

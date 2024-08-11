@@ -47,7 +47,7 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
 
 
   private async getUsersFromServer( server: any ){
-    await server.populate('users', {
+    const serverPop = await server.populate('users', {
       name: 1,
       email: 1,
       img: 1,
@@ -59,7 +59,9 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
       createdAt: 1,
     });
 
-    return server;
+    console.log(serverPop);
+
+    return serverPop;
   }
 
 
@@ -69,11 +71,9 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
 
 
   async joinById({serverId, userId}: JoinServerByIdDto): Promise<ChatServerEntity> {
-    const server = await this.getServerById(serverId);
-
-    const [ServerPop, user] = await Promise.all([
-      this.getUsersFromServer(server),
-      this.getUserById(userId),
+    const [server, user] = await Promise.all([
+      this.getServerById(serverId),
+      this.getUserById(userId)
     ]);
 
     server.users.forEach( usr => {
@@ -85,7 +85,7 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
     server.users.push(user._id);
     await server.save();
 
-    return ChatServerMapper.getChatServerFromObject(ServerPop);
+    return ChatServerMapper.getChatServerFromObject(await this.getUsersFromServer(server));
   };
 
 
