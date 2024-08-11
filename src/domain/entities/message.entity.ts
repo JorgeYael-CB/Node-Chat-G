@@ -8,6 +8,8 @@ export class MessageEntity {
     public readonly server: any,
     public readonly content: string,
     public readonly id: string | number,
+    public readonly createdAt: Date,
+    public readonly updatedAt: Date,
   ){};
 
 }
