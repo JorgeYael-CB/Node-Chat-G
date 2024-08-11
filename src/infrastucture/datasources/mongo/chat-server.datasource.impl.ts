@@ -59,8 +59,6 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
       createdAt: 1,
     });
 
-    console.log(serverPop);
-
     return serverPop;
   }
 
