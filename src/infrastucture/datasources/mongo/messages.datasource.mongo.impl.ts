@@ -21,7 +21,7 @@ export class MessagesDatasourceMongoImpl implements MessagesDatasource {
   }
 
   private async getServerById( id: any ){
-    if( !isValidObjectId(id) ) throw CustomError.BadRequestException(`Id is not valid.`);
+    if( id && !isValidObjectId(id) ) throw CustomError.BadRequestException(`Id is not valid.`);
     const server = await ChatServerModel.findById( id );
 
     if( !server ) throw CustomError.BadRequestException(`Server with id: ${id} not found.`);
@@ -41,15 +41,16 @@ export class MessagesDatasourceMongoImpl implements MessagesDatasource {
     const { content, serverId, userId } = sendMessageDto;
 
     const [chatServer, user] = await Promise.all([
-      this.getServerById(serverId),
+      ChatServerModel.findOne({serverId: sendMessageDto.serverId}),
       this.getUserById(userId),
     ]);
 
+    if( !chatServer ) throw CustomError.BadRequestException(`Server not found...`);
     this.checkUserStatus(user, ['USER']);
 
     const newMessage = await MessageModel.create({
       content,
-      server: serverId,
+      server: chatServer._id,
       user: userId,
     });
 

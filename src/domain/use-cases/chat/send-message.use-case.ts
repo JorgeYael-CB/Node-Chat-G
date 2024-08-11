@@ -16,11 +16,11 @@ export class SendMessageUseCase {
     const message = await this.messagesRepository.sendMessage(sendMessageDto);
 
     const messageWs:WsType = 'client-message';
-    this.wssService.onSendMessage(messageWs, message);
+    this.wssService.onSendMessage(messageWs, {...message, serverUuid: sendMessageDto.serverId});
 
     return {
       status: 201,
-      message,
+      message: {...message, serverUuid: sendMessageDto.serverId},
     }
   }
 

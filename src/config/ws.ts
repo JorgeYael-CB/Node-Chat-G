@@ -1,5 +1,6 @@
 import { Server } from "http";
 import { WebSocket, WebSocketServer } from 'ws';
+import { WsType } from "../domain/types";
 
 
 
@@ -40,7 +41,7 @@ export class WssService {
   }
 
 
-  public onSendMessage( type: string, payload: Object )
+  public onSendMessage( type: WsType, payload: Object )
   {
     this.wss.clients.forEach( cliente => {
       if( cliente.readyState === WebSocket.OPEN )

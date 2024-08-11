@@ -6,6 +6,7 @@ import { CustomError } from "../../../domain/errors";
 import { ChatServerModel, UserModel } from "../../../database/mongo";
 import { ChatServerMapper } from "../../mappers";
 import { UuidAdpater } from "../../../config/uuid";
+import { Server } from '../../../presentation/server';
 
 
 export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
@@ -29,8 +30,62 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
     return user;
   }
 
-  joinById(joinServerByIdDto: JoinServerByIdDto): Promise<ChatServerEntity> {
-    throw new Error("Method not implemented.");
+
+  public async getServerById(serverId: any) {
+    let server;
+
+    if( isValidObjectId(serverId) ){
+      server = await ChatServerModel.findById(serverId);
+    } else {
+      server = await ChatServerModel.findOne({serverId});
+    }
+
+    if( !server ) throw CustomError.BadRequestException(`Server with id: ${serverId} not found.`);
+
+    return server;
+  }
+
+
+  private async getUsersFromServer( server: any ){
+    await server.populate('users', {
+      name: 1,
+      email: 1,
+      img: 1,
+      roles: 1,
+      active: 1,
+      country: 1,
+      messages: 1,
+      updatedAt: 1,
+      createdAt: 1,
+    });
+
+    return server;
+  }
+
+
+  public async getServerBy(serverId: any) {
+    return  ChatServerMapper.getChatServerFromObject( await this.getUsersFromServer( await this.getServerById(serverId) ) );
+  }
+
+
+  async joinById({serverId, userId}: JoinServerByIdDto): Promise<ChatServerEntity> {
+    const server = await this.getServerById(serverId);
+
+    const [ServerPop, user] = await Promise.all([
+      this.getUsersFromServer(server),
+      this.getUserById(userId),
+    ]);
+
+    server.users.forEach( usr => {
+      if( usr._id.toString() === user._id.toString() ){
+        throw CustomError.BadRequestException('User already server.');
+      }
+    });
+
+    server.users.push(user._id);
+    await server.save();
+
+    return ChatServerMapper.getChatServerFromObject(ServerPop);
   };
 
 
@@ -61,18 +116,7 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
     }
 
     //retornar el servidor con sus ultimos 10 mensajes.
-    return ChatServerMapper.getChatServerFromObject( await server.populate('users', {
-      name: 1,
-      email: 1,
-      img: 1,
-      roles: 1,
-      id: 1,
-      active: 1,
-      country: 1,
-      messages: 1,
-      updatedAt: 1,
-      createdAt: 1,
-    }));
+    return ChatServerMapper.getChatServerFromObject( await this.getUsersFromServer(server));
   };
 
 

@@ -19,7 +19,8 @@ export class ChatServerRoutes {
     const controller = new ChatServerController(chatServerRepository);
 
     router.post('/join-random-server', authMiddleware.validateUserFromToken, controller.joinRandomServer);
-    router.get('/join-by-id/:serverId', controller.joinById);
+    router.post('/join-by-id', authMiddleware.validateUserFromToken, controller.joinById);
+    router.get('/get-server-data/:serverId', authMiddleware.validateUserFromToken, controller.getServerData);
 
     return router;
   }

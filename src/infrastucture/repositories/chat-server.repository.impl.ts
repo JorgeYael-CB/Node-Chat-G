@@ -11,6 +11,11 @@ export class ChatServerRepositoryImpl implements ChatServerRepository {
   ){}
 
 
+  getServerBy(serverId: any): Promise<ChatServerEntity> {
+    return this.chatServerDatasource.getServerBy(serverId);
+  }
+
+
   disconnectServer(disconnectServerDto: DisconnectServerDto): Promise<void> {
     return this.chatServerDatasource.disconnectServer( disconnectServerDto );
   }

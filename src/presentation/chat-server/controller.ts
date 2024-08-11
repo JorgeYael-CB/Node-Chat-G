@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ChatServerRepository } from "../../domain/repositories";
-import { JoinRandomServerDto } from "../../domain/dtos/chat-server";
-import { JoinRandomServerUseCase } from "../../domain/use-cases/chat-server";
+import { JoinRandomServerDto, JoinServerByIdDto } from "../../domain/dtos/chat-server";
+import { JoinByIdServerUseCase, JoinRandomServerUseCase } from "../../domain/use-cases/chat-server";
 import { CustomError } from "../../domain/errors";
 
 export class ChatServerController {
@@ -31,7 +31,27 @@ export class ChatServerController {
 
 
   joinById = ( req:Request, res:Response) => {
-    res.json('Uniendote con el id...');
+    const [error, joinServerByDto] = JoinServerByIdDto.create(req.body);
+    if( error ) return res.status(400).json({error, status: 400});
+
+    new JoinByIdServerUseCase(this.chatServerRepository)
+      .join( joinServerByDto! )
+        .then( data => res.status(201).json(data) )
+        .catch( err => this.handleError(err, res) );
+  }
+
+
+  getServerData = ( req:Request, res:Response ) => {
+    const { serverId } = req.params;
+
+    this.chatServerRepository.getServerBy(serverId)
+      .then( data => {
+        return res.status(200).json({
+          server: data,
+          status: 200
+        });
+      })
+      .catch( err => this.handleError(err, res) );
   }
 
 }
