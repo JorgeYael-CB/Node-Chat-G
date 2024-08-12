@@ -62,14 +62,30 @@ export class ChatServerDatasourceImpl implements ChatServerDatasoruce {
     return serverPop;
   }
 
+  private async getMessagesFromServer( server: any ){
+    const serverPop = await server.populate('messages', {
+      user: 1,
+      server: 1,
+      content: 1,
+      id: 1,
+      createdAt: 1,
+      updatedAt: 1,
+    });
+
+    return serverPop;
+  }
+
 
   public async getServerBy(serverId: any) {
-    return  ChatServerMapper.getChatServerFromObject( await this.getUsersFromServer( await this.getServerById(serverId) ) );
+    const server = await this.getServerById(serverId);
+    const serverWithMessages = await this.getMessagesFromServer(server);
+
+    return  ChatServerMapper.getChatServerFromObject( await this.getUsersFromServer( serverWithMessages ));
   }
 
 
   async joinById({serverId, userId}: JoinServerByIdDto): Promise<ChatServerEntity> {
-    const [server, user] = await Promise.all([
+  const [server, user] = await Promise.all([
       this.getServerById(serverId),
       this.getUserById(userId)
     ]);

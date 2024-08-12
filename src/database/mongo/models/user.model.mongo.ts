@@ -21,7 +21,7 @@ const UserSchema = new Schema({
 
   img: {
     type: String,
-    default: 'https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png'
+    default: 'https://th.bing.com/th/id/R.bc975bd7b61feebe790209655e985da0?rik=mjPXaG9RV7M6cg&pid=ImgRaw&r=0'
   },
 
   roles: {
